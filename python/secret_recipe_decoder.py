@@ -54,18 +54,52 @@ class Ingredient():
 def decode_string(str):
     """Given a string named str, use the Caesar encoding above to return the decoded string."""
     # TODO: implement me
-    return '1 cup'
+    decoded_string = ''
+    for character in range(0, len(str)):
+        if str[character] in ENCODING:
+            decoded_char = ENCODING.get(str[character])
+            decoded_string += decoded_char
+        else:
+            decoded_string += str[character]
+    return decoded_string
 
 
 def decode_ingredient(line):
     """Given an ingredient, decode the amount and description, and return a new Ingredient"""
     # TODO: implement me
-    return Ingredient("1 cup", "butter")
+    line_list = []
+    if '#' in line:
+        line_list = line.split('#', 1)
+    decoded_amount = decode_string(line_list[0])
+    decoded_ingredient = decode_string(line_list[1])
+    return Ingredient(decoded_amount, decoded_ingredient)
 
 
 def main():
     """A program that decodes a secret recipe"""
     # TODO: implement me
+
+    secret_recipe_file = open("secret_recipe.txt", "r")
+    decoded_recipe_file = open("decoded_recipe.txt", "w")
+
+    decoded_ingredient_list = []
+
+    secret_line = secret_recipe_file.readline()
+    while secret_line:
+        decoded_ingredient_list.append(decode_ingredient(secret_line))
+        secret_line = secret_recipe_file.readline()
+
+    secret_recipe_file.close()
+
+    for ingredient in decoded_ingredient_list:
+        decoded_recipe_file.write(ingredient.amount + " " + ingredient.description)
+
+    decoded_recipe_file.close()
+
+    test_decoded_file = open("decoded_recipe.txt", "r")
+    print(test_decoded_file.read())
+
+
 
 if __name__ == "__main__":
     main()
